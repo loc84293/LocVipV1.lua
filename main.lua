@@ -1,47 +1,42 @@
--- [[ 👑 LỘC VIP V1 - PHIÊN BẢN GỌN GÀNG 👑 ]] --
--- ĐÃ XÓA MỤC THÔNG TIN | XÓA AVATAR | ĐỔI MÀU XANH LÁ
+-- [[ 👑 LỘC VIP V1 - TANJIRO EDITION 👑 ]] --
+-- ĐÃ FIX LỖI MẤT HACK | THAY AVATAR TANJIRO
 
 local MyBrand = "👑 LỘC VIP V1"
+local Tanjiro_Img = "rbxassetid://18320495116" -- ID ảnh Tanjiro ngầu
 local Green = Color3.fromRGB(0, 255, 0)
 
 -- 1. Chạy bản gốc
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-Main.Lua"))()
 
--- 2. Hệ thống xử lý triệt để
+-- 2. Hệ thống xử lý thông minh (Không làm mất hack)
 task.spawn(function()
-    while task.wait(0.3) do
+    while task.wait(0.5) do
         pcall(function()
             for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
                 
-                -- [XÓA MỤC THÔNG TIN / INFO]
-                -- Tìm các nút bấm hoặc Tab có chữ "Thông tin", "Info", "Credit" để xóa
-                if v:IsA("TextLabel") or v:IsA("TextButton") then
-                    local txt = v.Text:lower()
-                    if txt:find("thông tin") or txt:find("info") or txt:find("credit") or txt:find("tác giả") then
-                        -- Xóa cái nút đó và cả cái khung chứa nó nếu có thể
-                        if v.Parent:IsA("Frame") or v.Parent:IsA("GuiObject") then
-                            v.Parent.Visible = false 
-                            -- Hoặc v.Parent:Destroy() nếu muốn xóa hẳn
-                        end
-                        v:Destroy()
-                    end
-                end
-
-                -- [XÓA AVATAR]
-                if v:IsA("ImageLabel") or v:IsA("ImageButton") then
-                    v:Destroy()
-                end
-
-                -- [ĐỔI TÊN & MÀU SANG XANH LÁ]
+                -- ĐỔI TÊN & MÀU (BỎ CHỮ IOS)
                 if v:IsA("TextLabel") or v:IsA("TextButton") then
                     if v.Text:find("Tuấn Anh") or v.Text:find("iOS") then
                         v.Text = MyBrand
+                        v.TextColor3 = Green
                     end
-                    v.TextColor3 = Green
                 end
 
-                -- Nhuộm xanh các thanh tiêu đề và viền
-                if v:IsA("Frame") and (v.Name:lower():find("top") or v.Name:lower():find("bar")) then
+                -- THAY AVATAR TUẤN ANH BẰNG TANJIRO
+                if v:IsA("ImageLabel") then
+                    -- Thay vì xóa (Destroy), mình chỉ thay đổi cái ảnh bên trong
+                    -- giúp bản hack không bị lỗi hệ thống
+                    v.Image = Tanjiro_Img
+                    v.ScaleType = Enum.ScaleType.Stretch
+                end
+
+                -- XÓA MỤC THÔNG TIN (ẨN ĐI CHO CHẮC)
+                if v.Name:lower():find("info") or v.Name:lower():find("credit") then
+                    v.Visible = false
+                end
+
+                -- NHUỘM XANH GIAO DIỆN
+                if v:IsA("Frame") and (v.Name:lower():find("top") or v.Name:lower():find("header")) then
                     v.BackgroundColor3 = Green
                 end
                 if v:IsA("UIStroke") then
@@ -52,9 +47,9 @@ task.spawn(function()
     end
 end)
 
--- Lời chào khi bắt đầu
+-- Lời chào khi mở
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = MyBrand,
-    Text = "Cảm ơn bạn đã sử dụng Lộc VIP V1",
+    Text = "Chào Lộc! Cảm ơn bạn đã dùng Lộc VIP V1",
     Duration = 5
 })
