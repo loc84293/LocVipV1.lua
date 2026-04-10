@@ -1,78 +1,45 @@
--- [[ 👑 LỘC VIP V1 - PHIÊN BẢN DIỆT TẬN GỐC 👑 ]] --
--- CHỈ HIỆN LỘC VIP | XÓA INFO | XÓA LOADING CŨ | GIỮ DELTA
-
+-- [[ 👑 LỘC VIP V1 - PHIÊN BẢN HOÀN THIỆN 👑 ]] --
 local MyName = "👑 LỘC VIP V1"
-local Gray = Color3.fromRGB(45, 45, 45)
 
--- 1. TẠO LOADING RIÊNG SIÊU NHỎ GỌN (CHE TÊN CŨ)
-local Screen = Instance.new("ScreenGui", game:GetService("CoreGui"))
-local Main = Instance.new("Frame", Screen)
-Main.Size = UDim2.new(1, 0, 1, 0) -- Phủ toàn màn hình để che sạch Loading cũ
-Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-Main.BackgroundTransparency = 0.1 -- Hơi trong suốt cho đẹp
-Main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-local Title = Instance.new("TextLabel", Main)
-Title.Text = MyName
-Title.Size = UDim2.new(1, 0, 1, 0)
-Title.TextColor3 = Color3.fromRGB(0, 255, 0)
-Title.TextSize = 40
-Title.Font = Enum.Font.GothamBold
-Title.BackgroundTransparency = 1
-
--- 2. HÀM QUÉT DỌN "THẦN TỐC"
-local function WipeOld(obj)
-    pcall(function()
-        -- Không đụng vào Delta của Lộc
-        if obj.Name:find("Delta") or obj.Name:find("Executor") then return end
-
-        if obj:IsA("TextLabel") or obj:IsA("TextButton") then
-            -- Xóa mục Thông Tin / Info / Loading cũ
-            if obj.Text:find("Tuấn Anh") or obj.Text:find("iOS") or obj.Text:find("tuananhios") or obj.Text:find("Loading") then
-                if obj.Name:lower():find("title") or obj.Parent.Name:lower():find("header") then
-                    obj.Text = MyName
-                else
-                    obj.Text = "" -- Bôi trắng sạch sẽ các chỗ khác
-                end
-            end
-            
-            -- Xóa sổ cái bảng Thông Tin vĩnh viễn
-            if obj.Text:find("Thông Tin") or obj.Text:find("Info") then
-                obj.Parent.Visible = false
-                task.defer(function() obj.Parent:Destroy() end)
-            end
+-- 1. KHÓA TÊN (Chặn script gốc tự đổi lại tên cũ)
+local OldIndex
+OldIndex = hookmetamethod(game, "__newindex", function(self, Index, Value)
+    if not checkcaller() and Index == "Text" then
+        if type(Value) == "string" and (Value:find("Tuấn Anh") or Value:find("iOS")) then
+            Value = MyName -- Luôn ép thành tên của Lộc
         end
-
-        -- Avatar xám
-        if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
-            if not obj.Name:lower():find("delta") then
-                obj.Image = ""
-                obj.BackgroundColor3 = Gray
-                obj.ImageTransparency = 1
-            end
-        end
-    end)
-end
-
--- 3. CHẠY HACK TRONG BÓNG TỐI
-task.spawn(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-Main.Lua"))()
-    
-    -- Quét liên tục từng mili giây để xóa dấu vết
-    local Start = tick()
-    while tick() - Start < 3.5 do
-        for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
-            WipeOld(v)
-            -- Ép sang Farming ngay để không hiện Info
-            if v:IsA("TextButton") and v.Text:find("Farming") then
-                for _, con in pairs(getconnections(v.Activated)) do con:Fire() end
-            end
-        end
-        task.wait()
     end
-    
-    -- Xong xuôi thì xóa màn hình che và vào chơi
-    Screen:Destroy()
+    return OldIndex(self, Index, Value)
 end)
 
-game:GetService("CoreGui").DescendantAdded:Connect(WipeOld)
+-- 2. XOÁ INFO VÀ TỰ VÀO FARMING
+local function FinalFix(obj)
+    if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+        -- Nếu thấy chữ Thông Tin hoặc các link mạng xã hội thì xóa hẳn
+        if obj.Text:find("Thông Tin") or obj.Text:find("Info") or obj.Text:find("facebook") or obj.Text:find("youtube") then
+            if obj.Parent and obj.Parent:IsA("Frame") then
+                obj.Parent:Destroy() -- Xóa sổ mục đó
+            end
+        end
+        -- Đổi tên tiêu đề chính
+        if obj.Text:find("Tuấn Anh") or obj.Text:find("iOS") then
+            obj.Text = MyName
+        end
+        -- Tự nhấn vào mục Farming cho Lộc
+        if obj.Text:find("Farming") then
+            for _, con in pairs(getconnections(obj.Activated)) do con:Fire() end
+        end
+    end
+end
+
+-- 3. CHẠY HACK GỐC
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-Main.Lua"))()
+
+-- Quét và dọn dẹp liên tục mỗi giây
+task.spawn(function()
+    while task.wait(0.5) do
+        for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
+            FinalFix(v)
+        end
+    end
+end)
