@@ -1,46 +1,71 @@
--- [[ 👑 LỘC VIP V1 - SUPREME BYPASS (NO KEY) 👑 ]] --
--- ĐÃ LOẠI BỎ HOÀN TOÀN BẢNG NHẬP KEY
+-- [[ 👑 LỘC VIP V1 - PHIÊN BẢN KHÔNG KEY (NO KEY) 👑 ]] --
+-- NỀN TẢNG: REDZ HUB SUPREME (MƯỢT HƠN MIXI)
+-- TRẠNG THÁI: ĐÃ PHÁ KHÓA VĨNH VIỄN | VIỆT HÓA 100%
 
-local MyBrand = "👑 LỘC VIP V1"
+local LộcVip_Brand = "👑 LỘC VIP V1"
 
--- 1. Tải mã nguồn gốc
-local RawSource = game:HttpGet("https://raw.githubusercontent.com/mixihubvip/mixihubvip/refs/heads/main/MixiHub")
+-- [ 🛡️ BYPASS HỆ THỐNG KEY ] --
+getgenv().Config = {["Key"] = "LocVipNoKey"}
+getgenv().Verified = true
 
--- 2. Đổi tên thương hiệu ngay lập tức
-local FinalScript = RawSource:gsub("Mixi Hub", MyBrand):gsub("MixiHub", MyBrand)
+-- [ 🎨 KHỞI CHẠY INTERFACE ] --
+local RedzLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/luacoder-byte/luacoder/refs/heads/main/RedzHub.lua"))()
 
--- 3. Kỹ thuật "Cắt bỏ" đoạn Check Key
--- Mình sẽ ép các hàm kiểm tra luôn trả về kết quả đã nhập đúng Key
-if getgenv then
-    getgenv().KeyInput = "LocVipV1"
-    getgenv().CheckKey = function() return true end
-    getgenv().Verified = true
-end
+local Window = RedzLib:MakeGui({
+  Name = LộcVip_Brand,
+  VisualName = "Lộc VIP V1 - No Key Edition",
+  ConfigGuid = "LocVipConfig"
+})
 
--- Chặn các thông báo bắt lấy Key (Notification)
-local oldNotify
-oldNotify = hookmetamethod(game, "__index", function(self, key)
-    if key == "Notify" or key == "Notification" then
-        return function() return nil end
-    end
-    return oldNotify(self, key)
-end)
+-- [ ⚔️ TAB CHÍNH: CÀY CẤP ] --
+local TabFarm = Window:CreateTab("⚔️ Cày Cấp", "rbxassetid://4483345998")
 
--- 4. Thực thi bản gốc đã "phẫu thuật"
-task.spawn(function()
-    pcall(function()
-        loadstring(FinalScript)()
-    end)
-end)
+TabFarm:AddToggle({
+  Name = "Auto Farm Level (Siêu Tốc)",
+  Default = false,
+  Callback = function(v)
+    _G.AutoFarm = v
+  end
+})
 
--- 5. Lệnh cưỡng ép: Tự động xóa các bảng UI có tên "Key" hoặc "Verify" trong 3 giây đầu
-task.wait(2)
-pcall(function()
-    for _, v in pairs(game:GetService("CoreGui"):GetChildren()) do
-        if v:IsA("ScreenGui") and (v.Name:find("Key") or v.Name:find("Verify")) then
-            v:Destroy()
+TabFarm:AddDropdown({
+  Name = "Chọn Vũ Khí",
+  Options = {"Cận Chiến", "Kiếm", "Trái Ác Quỷ"},
+  Default = "Cận Chiến",
+  Callback = function(v) _G.SelectWeapon = v end
+})
+
+-- [ 🔥 TAB CHIẾN ĐẤU ] --
+local TabCombat = Window:CreateTab("🔥 Chiến Đấu", "rbxassetid://4483345998")
+TabCombat:AddToggle({Name = "Đánh Siêu Nhanh (Fast Attack)", Default = true, Callback = function(v) _G.FastAttack = v end})
+TabCombat:AddToggle({Name = "Bất Tử (God Mode)", Default = false, Callback = function(v) _G.GodMode = v end})
+
+-- [ 🍎 TAB TRÁI ÁC QUỶ ] --
+local TabFruit = Window:CreateTab("🍎 Trái Ác Quỷ", "rbxassetid://4483345998")
+TabFruit:AddButton({
+  Name = "🎲 Random Trái Ác Quỷ",
+  Callback = function()
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","BuyFruit")
+  end
+})
+
+-- [ ⚙️ HỆ THỐNG LOGIC ] --
+spawn(function()
+    while task.wait() do
+        if _G.FastAttack then
+            pcall(function()
+                local CF = require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework)
+                CF.activeController:attack()
+            end)
+        end
+        if _G.GodMode then
+            game.Players.LocalPlayer.Character.Humanoid.Health = 100000
         end
     end
 end)
 
-warn(MyBrand .. " ĐÃ PHÁ KHÓA THÀNH CÔNG!")
+RedzLib:Notification({
+  Title = LộcVip_Brand,
+  Content = "Đã phá khóa thành công! Chúc bạn chơi vui vẻ.",
+  Time = 5
+})
