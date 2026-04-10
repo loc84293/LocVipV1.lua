@@ -1,5 +1,5 @@
--- [[ 👑 LỘC VIP V1 - PHIÊN BẢN QUÉT SẠCH DẤU VẾT 👑 ]] --
--- ĐÃ FIX: XÓA TRIỆT ĐỂ THÔNG TIN | Tên Tuấn Anh | Đổi Màu Xanh Lá
+-- [[ 👑 LỘC VIP V1 - PHIÊN BẢN CHỐNG MẤT HACK 👑 ]] --
+-- ĐÃ FIX: TÀNG HÌNH AVATAR | ĐỔI TÊN LIỀN | MÀU XANH LÁ
 
 local MyBrand = "👑 LỘC VIP V1"
 local Green = Color3.fromRGB(0, 255, 0)
@@ -7,42 +7,35 @@ local Green = Color3.fromRGB(0, 255, 0)
 -- 1. Chạy bản gốc
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-Main.Lua"))()
 
--- 2. Hệ thống "Trảm" tận gốc (Sử dụng vòng lặp siêu tốc)
+-- 2. Hệ thống xử lý Giao diện (Quét siêu nhanh)
 task.spawn(function()
-    while task.wait(0.1) do
+    while task.wait() do -- Quét liên tục để đè tên ngay lập tức
         pcall(function()
             for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
                 
-                -- [XÓA SẠCH MỤC THÔNG TIN & CÁC LINK MẠNG XÃ HỘI TRONG ẢNH]
-                if v:IsA("TextLabel") or v:IsA("TextButton") then
-                    local t = v.Text:lower()
-                    if t:find("thông tin") or t:find("info") or t:find("discord") or t:find("facebook") or t:find("youtube") or t:find("tiktok") or t:find("tuananh") then
-                        -- Xóa toàn bộ khung chứa cái nút/chữ đó để không còn dấu vết
-                        v.Parent.Visible = false 
-                        v:Destroy()
-                    end
-                end
-
-                -- [XÓA AVATAR TRÊN GÓC VÀ TRONG CÁC Ô]
+                -- [XÓA AVATAR BẰNG CÁCH CHO TÀNG HÌNH]
                 if v:IsA("ImageLabel") or v:IsA("ImageButton") then
-                    v:Destroy()
+                    v.ImageTransparency = 1 -- Làm ảnh trong suốt hoàn toàn
+                    v.BackgroundTransparency = 1 -- Xóa luôn nền của ảnh
                 end
 
-                -- [ÉP ĐỔI TÊN TIÊU ĐỀ CHÍNH]
-                if v:IsA("TextLabel") and (v.Text:find("Tuấn Anh") or v.Text:find("iOS")) then
-                    v.Text = MyBrand
-                    v.TextColor3 = Green
-                end
-
-                -- [NHUỘM XANH LÁ TOÀN BỘ GIAO DIỆN]
-                if v:IsA("Frame") then
-                    -- Đổi các thanh màu xanh dương/đen sang xanh lá
-                    if v.BackgroundColor3 == Color3.fromRGB(0, 102, 255) or v.Name:lower():find("header") then
-                        v.BackgroundColor3 = Green
+                -- [ĐỔI TÊN THÀNH LỘC VIP V1]
+                if v:IsA("TextLabel") or v:IsA("TextButton") then
+                    if v.Text:find("Tuấn Anh") or v.Text:find("iOS") or v.Text:find("tuananhios") then
+                        v.Text = MyBrand
+                        v.TextColor3 = Green -- Chữ màu xanh lá cho ngầu
+                    end
+                    
+                    -- [ẨN MỤC THÔNG TIN | INFO]
+                    if v.Text:find("Thông Tin") or v.Text:find("Info") then
+                        v.Parent.Visible = false -- Ẩn đi để menu gọn hơn
                     end
                 end
-                
-                -- Nhuộm xanh các đường viền
+
+                -- [ĐỔI MÀU GIAO DIỆN XANH LÁ]
+                if v:IsA("Frame") and v.BackgroundColor3 == Color3.fromRGB(0, 102, 255) then 
+                    v.BackgroundColor3 = Green
+                end
                 if v:IsA("UIStroke") then
                     v.Color = Green
                 end
@@ -51,7 +44,7 @@ task.spawn(function()
     end
 end)
 
--- Lời chào uy tín khi vừa mở hack
+-- Lời chào cảm ơn Lộc
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = MyBrand,
     Text = "Cảm ơn bạn đã sử dụng Lộc VIP V1",
