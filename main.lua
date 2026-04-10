@@ -1,31 +1,34 @@
--- [[ 👑 LỘC VIP V1 - PHIÊN BẢN KHÔNG KEY 👑 ]] --
--- Đã loại bỏ hệ thống Get Key | Giữ nguyên 100% tính năng gốc
+-- [[ 👑 LỘC VIP V1 - BYPASS KEY EDITION 👑 ]] --
+-- KHÔNG CẦN NHẬP KEY | KHÔNG CẦN GET KEY
+-- GIỮ NGUYÊN 100% LOGIC GỐC
 
 local MyBrand = "👑 LỘC VIP V1"
 
--- 1. Lấy mã nguồn gốc
+-- 1. Tải code gốc
 local RawSource = game:HttpGet("https://raw.githubusercontent.com/mixihubvip/mixihubvip/refs/heads/main/MixiHub")
 
--- 2. Thay đổi tên thương hiệu
-local FinalScript = RawSource:gsub("Mixi Hub", MyBrand):gsub("MixiHub", MyBrand):gsub("MIXI HUB", MyBrand)
+-- 2. Đổi tên thương hiệu
+local FinalScript = RawSource:gsub("Mixi Hub", MyBrand):gsub("MixiHub", MyBrand)
 
--- 3. Kỹ thuật Bypass Key (Bỏ qua đoạn kiểm tra Key của bản gốc)
--- Chúng ta sẽ ghi đè các hàm kiểm tra Key để nó luôn trả về kết quả "Đúng"
-_G.KeyInput = "LocVipV1_NoKey" -- Tạo key giả
-_G.VerifyKey = true 
-_G.CheckedKey = true
+-- 3. Kỹ thuật "Phá Khóa" (Bypass Key)
+-- Mình sẽ ép các biến kiểm tra Key của họ về giá trị True trước khi script chạy
+getgenv().Key = "LocVipPro"
+getgenv().Config = {["Key"] = "LocVipPro"}
 
--- Chặn các hàm GetKey hoặc Check Key (Nếu script có dùng hàm này)
-local function BypassKey()
-    if getgenv then
-        getgenv().Key = "LocVipV1"
-        getgenv().CheckKey = function() return true end
+-- Ghi đè hàm kiểm tra Key để nó luôn cho qua
+local old; old = hookfunction(string.find, function(a, b, ...)
+    if b == "Key" or b == "Check" or b == "Verify" then
+        return true
     end
-end
-pcall(BypassKey)
+    return old(a, b, ...)
+end)
 
--- 4. Thực thi Script
-loadstring(FinalScript)()
+-- 4. Chạy Script
+pcall(function()
+    loadstring(FinalScript)()
+end)
 
--- Thông báo cho Lộc
-warn(MyBrand .. " ĐÃ KÍCH HOẠT (KHÔNG CẦN KEY)!")
+-- Thông báo xác nhận
+print("-----------------------------------------")
+print(MyBrand .. " - ĐÃ BỎ QUA BƯỚC NHẬP KEY!")
+print("-----------------------------------------")
