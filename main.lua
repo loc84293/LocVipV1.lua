@@ -1,4 +1,7 @@
--- [[ 👑 LỘC VIP V1 👑 ]] --
+--- [[ 👑 LỘC VIP V1 👑 ]] --
+-- NGUYÊN BẢN ANHTUANDZAI HUB (TUAN ANH IOS)
+-- CHỈ THAY ĐỔI TÊN THƯƠNG HIỆU - GIỮ NGUYÊN CODE GỐC
+
 local LocVip_Brand = "👑 LỘC VIP V1"
 
 -- [ 🚀 TẢI VÀ XỬ LÝ MÃ NGUỒN ] --
