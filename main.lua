@@ -1,57 +1,55 @@
 -- [[ 👑 LỘC VIP V1 👑 ]] --
--- MÀU XANH LÁ | KHÔNG IOS | XÓA AVATAR
+-- CHẾ ĐỘ: XÓA SẠCH AVATAR | MÀU XANH LÁ | KHÔNG IOS
 
 local MyBrand = "👑 LỘC VIP V1"
-local GreenColor = Color3.fromRGB(0, 255, 127) -- Màu xanh lá cực đẹp
+local Green = Color3.fromRGB(0, 255, 0) -- Màu xanh lá thuần
 
 -- 1. Chạy bản gốc
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-Main.Lua"))()
 
--- 2. Lời chào cảm ơn khi vừa mở
+-- 2. Thông báo lời chào
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = MyBrand,
     Text = "Cảm ơn bạn đã sử dụng Lộc VIP V1",
-    Icon = "rbxassetid://15115201314",
-    Duration = 8
+    Duration = 5
 })
 
--- 3. Hệ thống xử lý giao diện (Màu sắc, Tên, Avatar)
+-- 3. Bộ lọc "Siêu Cấp" - Xóa Avatar và Đổi Màu
 task.spawn(function()
-    while task.wait(0.5) do
+    while task.wait(0.3) do -- Quét nhanh hơn để không kịp hiện avatar cũ
         pcall(function()
             for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
                 
-                -- ĐỔI TÊN (BỎ CHỮ IOS)
+                -- [XÓA TRIỆT ĐỂ AVATAR/IMAGE]
+                -- Xóa tất cả các hình ảnh đại diện, logo của tác giả cũ
+                if v:IsA("ImageLabel") then
+                    v:Destroy() -- Xóa hẳn luôn thay vì chỉ ẩn
+                end
+
+                -- [ĐỔI TÊN & MÀU CHỮ]
                 if v:IsA("TextLabel") or v:IsA("TextButton") then
                     if v.Text:find("Tuấn Anh") or v.Text:find("iOS") or v.Text:find("AnhTuấn") then
                         v.Text = MyBrand
-                        v.TextColor3 = GreenColor -- Đổi màu chữ sang xanh lá
                     end
+                    -- Ép tất cả chữ quan trọng sang màu Xanh Lá
+                    v.TextColor3 = Green
                 end
 
-                -- XÓA AVATAR / LOGO
-                if v:IsA("ImageLabel") then
-                    if v.Name:lower():find("logo") or v.Name:lower():find("avatar") or v.Image:find("rbxassetid") then
-                        v.Visible = false
-                    end
-                end
-
-                -- ĐỔI MÀU GIAO DIỆN SANG XANH LÁ
-                if v:IsA("Frame") and (v.BackgroundColor3 ~= Color3.fromRGB(255, 255, 255)) then
-                    if v.Name:lower():find("top") or v.Name:lower():find("header") or v.Name:lower():find("title") then
-                        v.BackgroundColor3 = GreenColor
+                -- [ĐỔI MÀU GIAO DIỆN XANH LÁ]
+                if v:IsA("Frame") then
+                    -- Tìm các thanh tiêu đề hoặc viền để nhuộm xanh
+                    if v.Name:lower():find("top") or v.Name:lower():find("bar") or v.Name:lower():find("header") then
+                        v.BackgroundColor3 = Green
                     end
                 end
                 
-                -- Đổi màu các đường viền (Stroke)
+                -- Nhuộm xanh các đường viền
                 if v:IsA("UIStroke") then
-                    v.Color = GreenColor
+                    v.Color = Green
                 end
             end
         end)
     end
 end)
 
-warn("-----------------------------------------")
-warn("CAM ON BAN DA SU DUNG LOC VIP V1!")
-warn("-----------------------------------------")
+print("--- LỘC VIP V1 ĐÃ DỌN DẸP XONG GIAO DIỆN ---")
