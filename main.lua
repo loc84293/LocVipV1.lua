@@ -1,34 +1,46 @@
--- [[ 👑 LỘC VIP V1 - BYPASS KEY EDITION 👑 ]] --
--- KHÔNG CẦN NHẬP KEY | KHÔNG CẦN GET KEY
--- GIỮ NGUYÊN 100% LOGIC GỐC
+-- [[ 👑 LỘC VIP V1 - SUPREME BYPASS (NO KEY) 👑 ]] --
+-- ĐÃ LOẠI BỎ HOÀN TOÀN BẢNG NHẬP KEY
 
 local MyBrand = "👑 LỘC VIP V1"
 
--- 1. Tải code gốc
+-- 1. Tải mã nguồn gốc
 local RawSource = game:HttpGet("https://raw.githubusercontent.com/mixihubvip/mixihubvip/refs/heads/main/MixiHub")
 
--- 2. Đổi tên thương hiệu
+-- 2. Đổi tên thương hiệu ngay lập tức
 local FinalScript = RawSource:gsub("Mixi Hub", MyBrand):gsub("MixiHub", MyBrand)
 
--- 3. Kỹ thuật "Phá Khóa" (Bypass Key)
--- Mình sẽ ép các biến kiểm tra Key của họ về giá trị True trước khi script chạy
-getgenv().Key = "LocVipPro"
-getgenv().Config = {["Key"] = "LocVipPro"}
+-- 3. Kỹ thuật "Cắt bỏ" đoạn Check Key
+-- Mình sẽ ép các hàm kiểm tra luôn trả về kết quả đã nhập đúng Key
+if getgenv then
+    getgenv().KeyInput = "LocVipV1"
+    getgenv().CheckKey = function() return true end
+    getgenv().Verified = true
+end
 
--- Ghi đè hàm kiểm tra Key để nó luôn cho qua
-local old; old = hookfunction(string.find, function(a, b, ...)
-    if b == "Key" or b == "Check" or b == "Verify" then
-        return true
+-- Chặn các thông báo bắt lấy Key (Notification)
+local oldNotify
+oldNotify = hookmetamethod(game, "__index", function(self, key)
+    if key == "Notify" or key == "Notification" then
+        return function() return nil end
     end
-    return old(a, b, ...)
+    return oldNotify(self, key)
 end)
 
--- 4. Chạy Script
+-- 4. Thực thi bản gốc đã "phẫu thuật"
+task.spawn(function()
+    pcall(function()
+        loadstring(FinalScript)()
+    end)
+end)
+
+-- 5. Lệnh cưỡng ép: Tự động xóa các bảng UI có tên "Key" hoặc "Verify" trong 3 giây đầu
+task.wait(2)
 pcall(function()
-    loadstring(FinalScript)()
+    for _, v in pairs(game:GetService("CoreGui"):GetChildren()) do
+        if v:IsA("ScreenGui") and (v.Name:find("Key") or v.Name:find("Verify")) then
+            v:Destroy()
+        end
+    end
 end)
 
--- Thông báo xác nhận
-print("-----------------------------------------")
-print(MyBrand .. " - ĐÃ BỎ QUA BƯỚC NHẬP KEY!")
-print("-----------------------------------------")
+warn(MyBrand .. " ĐÃ PHÁ KHÓA THÀNH CÔNG!")
