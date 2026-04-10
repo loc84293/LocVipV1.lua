@@ -1,22 +1,29 @@
--- [[ 👑 LỘC VIP V1 - PHIÊN BẢN SIÊU MƯỢT 👑 ]] --
--- Tác giả: Lộc VIP
+-- [[ 👑 LỘC VIP V1 👑 ]] --
+-- Đã tối ưu hóa để không bị văng game (No Crash)
 
-local MyBrand = "👑 LỘC VIP V1"
+local BrandName = "👑 LỘC VIP V1"
 
--- [ 🛡️ KHỞI TẠO HỆ THỐNG ] --
+-- [ 🛡️ HỆ THỐNG FIX LỖI ] --
 if not game:IsLoaded() then game.Loaded:Wait() end
-
--- [ 🚀 CHẠY SCRIPT CHÍNH ] --
--- Mình sẽ tải bản Rubu V5 về và ép nó đổi tên thành Lộc VIP V1 ngay lập tức
 pcall(function()
-    local RawCode = game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubv5.lua")
-    
-    -- Thay thế toàn bộ tên cũ sang tên của Lộc
-    local LocVipCode = RawCode:gsub("Rubu TV", MyBrand):gsub("RubuHub", MyBrand):gsub("Rubu", MyBrand)
-    
-    -- Thực thi bản đã đổi tên
-    loadstring(LocVipCode)()
+    if game.CoreGui:FindFirstChild("Rayfield") then
+        game.CoreGui.Rayfield:Destroy() -- Xóa menu cũ nếu bị kẹt
+    end
 end)
 
--- [ 📢 THÔNG BÁO ] --
-warn(MyBrand .. " ĐÃ KÍCH HOẠT! NẾU KHÔNG HIỆN MENU, HÃY KIỂM TRA LẠI EXECUTOR.")
+-- [ 🚀 TẢI SCRIPT VỚI TÊN MỚI ] --
+local Success, Error = pcall(function()
+    local Raw = game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubv5.lua")
+    
+    -- Thay thế tất cả tên Rubu thành Lộc VIP V1
+    local FinalCode = Raw:gsub("Rubu TV", BrandName):gsub("RubuHub", BrandName):gsub("Rubu", BrandName)
+    
+    loadstring(FinalCode)()
+end)
+
+-- [ 📢 KIỂM TRA TRẠNG THÁI ] --
+if Success then
+    warn(BrandName .. " ĐÃ KÍCH HOẠT THÀNH CÔNG!")
+else
+    warn("LỖI KHI CHẠY SCRIPT: " .. tostring(Error))
+end
