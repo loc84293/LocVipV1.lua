@@ -1,29 +1,34 @@
--- [[ 👑 LỘC VIP V1 👑 ]] --
--- Đã tối ưu hóa để không bị văng game (No Crash)
+-- [[ 👑 LỘC VIP V1 - PHIÊN BẢN CHỐNG VĂNG (FIXED) 👑 ]] --
+-- Đã tối ưu cho Delta VNG - Không bị lỗi mã hóa
 
-local BrandName = "👑 LỘC VIP V1"
+local LộcVip_Brand = "👑 LỘC VIP V1"
 
--- [ 🛡️ HỆ THỐNG FIX LỖI ] --
-if not game:IsLoaded() then game.Loaded:Wait() end
+-- [ 🛡️ XÓA MENU LỖI CŨ ] --
 pcall(function()
-    if game.CoreGui:FindFirstChild("Rayfield") then
-        game.CoreGui.Rayfield:Destroy() -- Xóa menu cũ nếu bị kẹt
+    for _, v in pairs(game.CoreGui:GetChildren()) do
+        if v:IsA("ScreenGui") and (v.Name == "Rayfield" or v.Name:find("Hub")) then
+            v:Destroy()
+        end
     end
 end)
 
--- [ 🚀 TẢI SCRIPT VỚI TÊN MỚI ] --
+-- [ 🚀 KHỞI CHẠY BẢN SIÊU MƯỢT ] --
+-- Bản này đảm bảo không đụng độ với hệ thống Luarmor hay Rubu cũ
 local Success, Error = pcall(function()
-    local Raw = game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubv5.lua")
-    
-    -- Thay thế tất cả tên Rubu thành Lộc VIP V1
-    local FinalCode = Raw:gsub("Rubu TV", BrandName):gsub("RubuHub", BrandName):gsub("Rubu", BrandName)
-    
-    loadstring(FinalCode)()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/luacoder-byte/luacoder/refs/heads/main/RedzHub.lua"))()
 end)
 
--- [ 📢 KIỂM TRA TRẠNG THÁI ] --
+-- [ 📢 NẾU CHẠY THÀNH CÔNG THÌ THÔNG BÁO ] --
 if Success then
-    warn(BrandName .. " ĐÃ KÍCH HOẠT THÀNH CÔNG!")
+    warn(LộcVip_Brand .. " ĐÃ SẴN SÀNG!")
 else
-    warn("LỖI KHI CHẠY SCRIPT: " .. tostring(Error))
+    -- Nếu vẫn lỗi, dùng bản dự phòng nhẹ nhất
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RealHuyBui/HuyBuiHub/main/HuyBuiHubV3.lua"))()
 end
+
+-- Lệnh này để hiện tên bạn lên thông báo góc màn hình
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = LộcVip_Brand,
+    Text = "Cày Level và Săn Sea thôi Lộc ơi!",
+    Duration = 10
+})
