@@ -1,16 +1,14 @@
--- [[ 👑 LỘC VIP V1 PRO MAX 👑 ]] --
-local MyName = "👑 LỘC VIP V1 PRO MAX"
+-- [[ 👑 LỘC VIP V1 👑 ]] --
+local MyBrand = "👑 LỘC VIP V1"
 
--- Lấy code gốc từ link Trẩu V9 của bạn
-local RawBuffalo = game:HttpGet("https://raw.githubusercontent.com/trungdao2k4/buffalo/refs/heads/main/traurobloxv9.lua")
+-- Lấy mã nguồn gốc từ link bạn cung cấp
+local RawSource = game:HttpGet("https://raw.githubusercontent.com/mixihubvip/mixihubvip/refs/heads/main/MixiHub")
 
--- Thay đổi tên hiển thị trong toàn bộ mã nguồn
-local LocVipCode = RawBuffalo:gsub("Trẩu V9", MyName):gsub("TRẨU V9", MyName):gsub("Buffalo Hub", MyName)
+-- Xử lý thay tên: Xóa sạch mọi dấu vết của tên cũ và thay bằng Lộc VIP V1
+local FinalScript = RawSource:gsub("Mixi Hub", MyBrand):gsub("MixiHub", MyBrand):gsub("MIXI HUB", MyBrand)
 
--- Thực thi bản Trẩu V9 dưới tên Lộc VIP
-loadstring(LocVipCode)()
+-- Thực thi bản gốc dưới tên của Lộc
+loadstring(FinalScript)()
 
--- Thông báo nhỏ dưới Console
-print("-----------------------------------------")
-print(MyName .. " ĐÃ KÍCH HOẠT THÀNH CÔNG!")
-print("-----------------------------------------")
+-- Thông báo xác nhận hệ thống
+warn(MyBrand .. " ĐÃ KÍCH HOẠT THÀNH CÔNG!")
