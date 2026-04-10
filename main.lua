@@ -1,16 +1,15 @@
--- [[ 👑 LỘC VIP V1 - PHIÊN BẢN SẠCH BÓNG TÊN CŨ 👑 ]] --
--- CHỈ GIỮ 1 TÊN CHÍNH | XÓA HẾT TÊN CŨ | GIỮ DELTA GỐC
+-- [[ 👑 LỘC VIP V1 - BẢN PHỤC KÍCH TRIỆT ĐỂ 👑 ]] --
+-- MỤC TIÊU: XÓA INFO | CHỈ 1 TÊN CHÍNH | AVATAR XÁM | GIỮ DELTA
 
 local MyName = "👑 LỘC VIP V1"
 local Gray = Color3.fromRGB(45, 45, 45)
 
--- 1. CHẶN TRƯỚC (HOOK): Không cho bất kỳ chữ "Tuấn Anh" nào được tạo ra
+-- 1. CHIẾN THUẬT PHỤC KÍCH: Chặn mọi dòng chữ cũ ngay khi nó vừa được tạo ra
 local OldIndex
 OldIndex = hookmetamethod(game, "__newindex", function(self, Index, Value)
     if not checkcaller() and Index == "Text" then
         if type(Value) == "string" and (Value:find("Tuấn Anh") or Value:find("iOS")) then
-            -- Nếu là dòng tiêu đề trên cùng thì đổi thành Lộc VIP V1
-            -- Nếu là dòng nhỏ lẻ khác thì cho biến mất (xóa trắng)
+            -- Chỉ giữ tên Lộc ở tiêu đề chính, các chỗ khác cho biến mất (xóa trắng)
             if self.Name:lower():find("title") or self.Name:lower():find("header") or self.Parent.Name:lower():find("header") then
                 Value = MyName
             else
@@ -21,30 +20,30 @@ OldIndex = hookmetamethod(game, "__newindex", function(self, Index, Value)
     return OldIndex(self, Index, Value)
 end)
 
--- 2. HÀM DỌN DẸP THẦN TỐC
-local function SilentClean(obj)
+-- 2. HÀM DỌN DẸP "SẠCH BÓNG"
+local function DeepClean(obj)
     pcall(function()
-        -- Tuyệt đối không đụng vào Delta để giữ nguyên icon Delta cho Lộc
+        -- Bảo vệ Delta: Không đụng vào bất cứ thứ gì của Delta
         if obj.Name:find("Delta") or obj.Name:find("Executor") then return end
 
         if obj:IsA("TextLabel") or obj:IsA("TextButton") then
-            -- Xóa mục Thông Tin ngay lập tức để không bị hiện lúc mới load
+            -- XÓA BẢNG THÔNG TIN NGAY LẬP TỨC
             if obj.Text:find("Thông Tin") or obj.Text:find("Info") then
                 obj.Parent.Visible = false
                 task.defer(function() obj.Parent:Destroy() end)
             end
             
-            -- Chỗ nào còn sót tên cũ thì "bôi xóa" sạch sẽ
+            -- Quét nốt những chữ tên cũ còn sót
             if obj.Text:find("Tuấn Anh") or obj.Text:find("iOS") then
                 if obj.Name:lower():find("title") or obj.Parent.Name:lower():find("header") then
                     obj.Text = MyName
                 else
-                    obj.Text = "" 
+                    obj.Text = "" -- Bôi trắng các chỗ khác như Lộc muốn
                 end
             end
         end
 
-        -- Biến Avatar thành ô xám sạch sẽ (không đổi icon Delta)
+        -- BIẾN AVATAR HACK THÀNH MÀU XÁM (GIỮ NGUYÊN ICON DELTA)
         if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
             if not obj.Name:lower():find("delta") then
                 obj.Image = ""
@@ -58,14 +57,14 @@ end
 -- 3. CHẠY BẢN HACK GỐC
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-Main.Lua"))()
 
--- 4. QUÉT LIÊN TỤC ĐỂ ĐẢM BẢO KHÔNG HIỆN TÊN CŨ
-game:GetService("CoreGui").DescendantAdded:Connect(SilentClean)
+-- 4. VÒNG LẶP CANH GÁC SIÊU TỐC (MỖI 0.01 GIÂY)
+game:GetService("CoreGui").DescendantAdded:Connect(DeepClean)
 
 task.spawn(function()
-    while task.wait() do -- Quét cực nhanh để xóa tên cũ ngay khi nó vừa ló ra
+    while task.wait() do 
         for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
-            SilentClean(v)
-            -- Tự động nhảy sang tab Farming để menu luôn khít và đẹp
+            DeepClean(v)
+            -- Tự động nhấn vào Farming để thoát khỏi tab Thông Tin nếu nó lỡ hiện
             if v:IsA("TextButton") and v.Text:find("Farming") then
                 for _, connection in pairs(getconnections(v.Activated)) do
                     connection:Fire()
