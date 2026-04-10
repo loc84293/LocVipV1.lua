@@ -1,33 +1,39 @@
--- [[ 👑 LỘC VIP V1 - PHIÊN BẢN CHUẨN CHỨC NĂNG 👑 ]] --
--- CHỈ XÓA TÊN CŨ | GIỮ NGUYÊN NÚT HACK | AVATAR XÁM
+-- [[ 👑 LỘC VIP V1 - BẢN TỐI GIẢN 👑 ]] --
+-- CHỈ ĐỔI TÊN ĐẦU | XÓA TÊN CŨ CHỖ KHÁC | GIỮ NGUYÊN DELTA
 
 local MyName = "👑 LỘC VIP V1"
-local Green = Color3.fromRGB(0, 255, 0)
 local Gray = Color3.fromRGB(45, 45, 45)
 
--- 1. HÀM XỬ LÝ THÔNG MINH: CHỈ ĐỔI TÊN, KHÔNG XÓA CHỨC NĂNG
-local function SmartClean(obj)
+-- 1. HÀM XỬ LÝ "TẨY XÓA" THÔNG MINH
+local function MinimalClean(obj)
     pcall(function()
-        -- Bỏ qua Delta để giữ nguyên gốc Delta
+        -- Không đụng vào Delta của Lộc
         if obj.Name:find("Delta") or obj.Name:find("Executor") then return end
 
         if obj:IsA("TextLabel") or obj:IsA("TextButton") then
-            -- CHIẾN THUẬT: Chỉ thay thế nếu thấy tên người cũ
-            if obj.Text:find("Tuấn Anh") or obj.Text:find("iOS") or obj.Text:find("tuananhios") then
-                obj.Text = MyName
-                obj.TextColor3 = Green
+            -- KIỂM TRA NẾU LÀ TÊN Ở ĐẦU MENU (Tiêu đề chính)
+            -- Thường là cái Label to nhất hoặc nằm ở Header
+            if obj.Parent.Name:lower():find("header") or obj.Parent.Name:lower():find("title") then
+                if obj.Text:find("Tuấn Anh") or obj.Text:find("iOS") then
+                    obj.Text = MyName
+                end
+            else
+                -- CÁC CHỖ KHÁC: Nếu thấy tên cũ thì bôi trắng (xóa chữ)
+                if obj.Text:find("Tuấn Anh") or obj.Text:find("iOS") then
+                    obj.Text = "" 
+                end
             end
             
-            -- Xóa mục "Thông Tin" để các nút Farming nhảy lên (không để khoảng trống)
+            -- XÓA MỤC THÔNG TIN (INFO) ĐỂ KHÔNG HIỆN LÚC ĐẦU
             if obj.Text:find("Thông Tin") or obj.Text:find("Info") then
-                obj.Parent.Visible = false
-                task.defer(function() obj.Parent:Destroy() end)
+                if obj.Parent then
+                    obj.Parent.Visible = false
+                    task.defer(function() obj.Parent:Destroy() end)
+                end
             end
-            
-            -- CÁC NÚT KHÁC (Farming, Teleport,...) KHÔNG CÓ TÊN CŨ THÌ ĐỂ YÊU NGUYÊN
         end
 
-        -- Avatar biến thành ô xám sạch sẽ
+        -- AVATAR BIẾN THÀNH MÀU XÁM (Đúng ý Lộc)
         if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
             if not obj.Name:lower():find("delta") then
                 obj.Image = ""
@@ -41,14 +47,14 @@ end
 -- 2. CHẠY BẢN HACK GỐC
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-Main.Lua"))()
 
--- 3. QUÉT VÀ CẬP NHẬT GIAO DIỆN
-game:GetService("CoreGui").DescendantAdded:Connect(SmartClean)
+-- 3. QUÉT VÀ DỌN DẸP
+game:GetService("CoreGui").DescendantAdded:Connect(MinimalClean)
 
 task.spawn(function()
     while task.wait(0.5) do
         for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
-            SmartClean(v)
-            -- Tự nhảy sang Farming để Lộc thấy nút bấm ngay
+            MinimalClean(v)
+            -- Tự động nhảy sang tab Farming để Menu nhìn sạch ngay từ đầu
             if v:IsA("TextButton") and v.Text:find("Farming") then
                 for _, connection in pairs(getconnections(v.Activated)) do
                     connection:Fire()
