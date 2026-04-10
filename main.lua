@@ -1,16 +1,16 @@
 -- [[ 👑 LỘC VIP V1 PRO MAX 👑 ]] --
-local LocVip_Name = "👑 LỘC VIP V1 PRO MAX"
+local MyName = "👑 LỘC VIP V1 PRO MAX"
 
--- Lấy mã nguồn gốc của Redz Hub
-local OriginalRedz = game:HttpGet("https://raw.githubusercontent.com/luacoder-byte/luacoder/refs/heads/main/RedzHub.lua")
+-- Lấy code gốc từ link Trẩu V9 của bạn
+local RawBuffalo = game:HttpGet("https://raw.githubusercontent.com/trungdao2k4/buffalo/refs/heads/main/traurobloxv9.lua")
 
--- Thay thế tất cả tên "Redz Hub" thành tên của bạn trong toàn bộ code
-local FinalCode = OriginalRedz:gsub("Redz Hub", LocVip_Name):gsub("redz hub", LocVip_Name)
+-- Thay đổi tên hiển thị trong toàn bộ mã nguồn
+local LocVipCode = RawBuffalo:gsub("Trẩu V9", MyName):gsub("TRẨU V9", MyName):gsub("Buffalo Hub", MyName)
 
--- Chạy bản Redz Hub đã đổi tên
-loadstring(FinalCode)()
+-- Thực thi bản Trẩu V9 dưới tên Lộc VIP
+loadstring(LocVipCode)()
 
--- Thông báo xác nhận
-print("---------------------------------")
-print(LocVip_Name .. " ĐÃ KÍCH HOẠT!")
-print("---------------------------------")
+-- Thông báo nhỏ dưới Console
+print("-----------------------------------------")
+print(MyName .. " ĐÃ KÍCH HOẠT THÀNH CÔNG!")
+print("-----------------------------------------")
