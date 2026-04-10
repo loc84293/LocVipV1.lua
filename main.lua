@@ -1,34 +1,27 @@
--- [[ 👑 LỘC VIP V1 - PHIÊN BẢN CHỐNG VĂNG (FIXED) 👑 ]] --
--- Đã tối ưu cho Delta VNG - Không bị lỗi mã hóa
+-- [[ 👑 LỘC VIP V1 - PHIÊN BẢN MIN HUB SIÊU CẤP 👑 ]] --
+-- Giữ nguyên 100% sức mạnh của MinXT2
+-- Đổi tên thương hiệu thành Lộc VIP V1
 
-local LộcVip_Brand = "👑 LỘC VIP V1"
+local MyBrand = "👑 LỘC VIP V1"
 
--- [ 🛡️ XÓA MENU LỖI CŨ ] --
-pcall(function()
-    for _, v in pairs(game.CoreGui:GetChildren()) do
-        if v:IsA("ScreenGui") and (v.Name == "Rayfield" or v.Name:find("Hub")) then
-            v:Destroy()
-        end
-    end
-end)
+-- [ 🛠️ FIX LỖI GIAO DIỆN ] --
+if not game:IsLoaded() then game.Loaded:Wait() end
 
--- [ 🚀 KHỞI CHẠY BẢN SIÊU MƯỢT ] --
--- Bản này đảm bảo không đụng độ với hệ thống Luarmor hay Rubu cũ
-local Success, Error = pcall(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/luacoder-byte/luacoder/refs/heads/main/RedzHub.lua"))()
-end)
+-- [ 🚀 KỸ THUẬT ĐỔI TÊN MÀ KHÔNG HỎNG CODE ] --
+-- Chúng ta sẽ thay thế tên hiển thị ngay khi script load vào bộ nhớ
+local RawCode = game:HttpGet("https://raw.githubusercontent.com/LuaCrack/Min/refs/heads/main/MinXt2Eng")
+local FinalCode = RawCode:gsub("Min Hub", MyBrand):gsub("MinHub", MyBrand):gsub("MinXT2", MyBrand)
 
--- [ 📢 NẾU CHẠY THÀNH CÔNG THÌ THÔNG BÁO ] --
-if Success then
-    warn(LộcVip_Brand .. " ĐÃ SẴN SÀNG!")
-else
-    -- Nếu vẫn lỗi, dùng bản dự phòng nhẹ nhất
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/RealHuyBui/HuyBuiHub/main/HuyBuiHubV3.lua"))()
-end
+-- [ 🔥 THỰC THI SCRIPT ] --
+loadstring(FinalCode)()
 
--- Lệnh này để hiện tên bạn lên thông báo góc màn hình
+-- [ 📢 THÔNG BÁO XÁC NHẬN ] --
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = LộcVip_Brand,
-    Text = "Cày Level và Săn Sea thôi Lộc ơi!",
-    Duration = 10
+    Title = MyBrand,
+    Text = "Đã kích hoạt Min Hub phiên bản Lộc VIP!",
+    Duration = 5
 })
+
+warn("-----------------------------------------")
+warn(MyBrand .. " LOADED SUCCESSFULLY!")
+warn("-----------------------------------------")
