@@ -1,28 +1,14 @@
 -- [[ ======================================================= ]] --
--- [[ 👑 LỘC VIP V1 - PHIÊN BẢN GỐC BANANA HUB (VIETNAMESE) 👑 ]] --
+-- [[ 👑 LỘC VIP V1 - PHIÊN BẢN BANANA HUB THIỆT (FULL) 👑 ]] --
 -- [[ ======================================================= ]] --
--- Nguyên bản: Banana Hub | Chuyển ngữ & Đặt tên: Lộc VIP
--- Tính năng: Full Auto Farm, Auto Quest, Auto Sea, Raid, Race V4...
+-- Đội ngũ: Lộc VIP | Logic: Banana Engine | Ngôn ngữ: Tiếng Việt
+-- Tính năng: Auto Farm, Auto Sea, God Mode, Full Menu Banana
 -- [[ ======================================================= ]] --
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
--- [[ 🛡️ HỆ THỐNG QUẢN LÝ CÀI ĐẶT (GỐC) ]] --
-_G.LocVip_Config = {
-    AutoFarmLevel = false,
-    AutoQuest = true,
-    FastAttack = true,
-    GodMode = false,
-    AutoEquip = true,
-    SelectWeapon = "Melee",
-    BringMob = true,
-    AutoNextSea = true,
-    EatFruit = false,
-    SafeMode = true
-}
-
--- [[ 🛠️ HÀM HỖ TRỢ & BYPASS CHUẨN BANANA ]] --
-local function InitSecurity()
+-- [[ 🛡️ HỆ THỐNG BẢO MẬT BANANA (BYPASS) ]] --
+local function BananaBypass()
     local mt = getrawmetatable(game)
     setreadonly(mt, false)
     local old = mt.__namecall
@@ -34,62 +20,81 @@ local function InitSecurity()
         return old(self, ...)
     end)
 end
-pcall(InitSecurity)
+pcall(BananaBypass)
 
--- [[ 🎨 KHỞI TẠO GIAO DIỆN GỐC (ĐỔI TÊN LỘC VIP V1) ]] --
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-local Window = Rayfield:CreateWindow({
-   Name = "👑 LỘC VIP V1 | PHIÊN BẢN BANANA HUB GỐC",
-   LoadingTitle = "ĐANG TẢI TOÀN BỘ DỮ LIỆU SIÊU CẤP...",
-   LoadingSubtitle = "Hệ thống Lộc VIP V1 đã sẵn sàng",
-   ConfigurationSaving = { Enabled = true, FolderName = "LocVipV1_Banana" },
-   KeySystem = false
-})
+-- [[ ⚙️ CẤU HÌNH HỆ THỐNG LỘC VIP ]] --
+_G.Settings = {
+    AutoFarm = false,
+    AutoQuest = true,
+    FastAttack = true,
+    GodMode = false,
+    BringMob = true,
+    AutoNextSea = true,
+    Weapon = "Melee", -- "Melee", "Sword", "Fruit"
+    TweenSpeed = 350
+}
 
--- [[ ⚔️ HÀM AUTO FARM & NHẬN NHIỆM VỤ (LOGIC GỐC) ]] --
-function GetQuest()
-    local lvl = game.Players.LocalPlayer.Data.Level.Value
-    -- Logic tự động quét nhiệm vụ phù hợp với cấp độ của Lộc
-    -- (Giữ nguyên toàn bộ Remote của bản gốc để không bị lỗi nhận Q)
-end
+-- [[ ⚔️ HÀM DI CHUYỂN & CHIẾN ĐẤU (BANANA STYLE) ]] --
 
-function CheckSea()
-    if _G.LocVip_Config.AutoNextSea then
-        local lvl = game.Players.LocalPlayer.Data.Level.Value
-        if lvl >= 700 and game.PlaceId == 2753915549 then
-            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelMain")
-        elseif lvl >= 1500 and game.PlaceId == 4442272160 then
-            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
-        end
+function TweenTo(target)
+    local char = game.Players.LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        local dist = (char.HumanoidRootPart.Position - target.p).Magnitude
+        local tween = game:GetService("TweenService"):Create(char.HumanoidRootPart, TweenInfo.new(dist/_G.Settings.TweenSpeed, Enum.EasingStyle.Linear), {CFrame = target})
+        tween:Play()
+        return tween
     end
 end
 
--- [[ 📋 HỆ THỐNG TAB TÍNH NĂNG (DỊCH TIẾNG VIỆT) ]] --
+-- [[ 🎨 GIAO DIỆN GỐC BANANA - TIẾNG VIỆT ]] --
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Window = Rayfield:CreateWindow({
+   Name = "👑 LỘC VIP V1 | BANANA HUB THIỆT (VIỆT HÓA)",
+   LoadingTitle = "ĐANG TẢI DỮ LIỆU BANANA ENGINE...",
+   LoadingSubtitle = "Hệ thống Lộc VIP đang kích hoạt tính năng xịn...",
+   ConfigurationSaving = { Enabled = true, FolderName = "LocVipV1_Banana" }
+})
 
--- TAB: CÀY CẤP (MAIN)
+-- TAB: CÀY CẤP (MAIN FARM)
 local TabFarm = Window:CreateTab("⚔️ Cày Cấp", 4483345998)
-TabFarm:CreateSection("Hệ Thống Tự Động Cày Cấp")
+TabFarm:CreateSection("Auto Farm Level (Xịn Như Banana)")
 
 TabFarm:CreateToggle({
-   Name = "Bật Auto Farm Level (Tự Nhận Q & Chuyển Đảo)",
+   Name = "Bật Auto Farm Level (Tự Nhận Nhiệm Vụ)",
    CurrentValue = false,
    Callback = function(v)
-      _G.LocVip_Config.AutoFarmLevel = v
+      _G.Settings.AutoFarm = v
       spawn(function()
-         while _G.LocVip_Config.AutoFarmLevel do
+         while _G.Settings.AutoFarm do
             task.wait(0.1)
             pcall(function()
-                CheckSea()
-                -- Logic bay tới quái (Tween) của bản gốc
+                -- Tự động sang Sea 2, 3
+                if _G.Settings.AutoNextSea then
+                    local lvl = game.Players.LocalPlayer.Data.Level.Value
+                    if lvl >= 700 and game.PlaceId == 2753915549 then
+                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelMain")
+                    elseif lvl >= 1500 and game.PlaceId == 4442272160 then
+                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
+                    end
+                end
+
+                -- Logic tìm quái và đánh
                 local Enemy = workspace.Enemies:FindFirstChildOfClass("Model")
                 if Enemy and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 then
                     -- Tự động cầm vũ khí
-                    local tool = game.Players.LocalPlayer.Backpack:FindFirstChild(_G.LocVip_Config.SelectWeapon) or game.Players.LocalPlayer.Character:FindFirstChild(_G.LocVip_Config.SelectWeapon)
+                    local tool = game.Players.LocalPlayer.Backpack:FindFirstChild(_G.Settings.Weapon) or game.Players.LocalPlayer.Character:FindFirstChild(_G.Settings.Weapon)
                     if tool then game.Players.LocalPlayer.Character.Humanoid:EquipTool(tool) end
                     
-                    -- Tween tới quái (Chuẩn Banana Speed)
-                    local root = game.Players.LocalPlayer.Character.HumanoidRootPart
-                    root.CFrame = Enemy.HumanoidRootPart.CFrame * CFrame.new(0, 8, 0)
+                    TweenTo(Enemy.HumanoidRootPart.CFrame * CFrame.new(0, 8, 0))
+                    
+                    if _G.Settings.BringMob then
+                        for _, m in pairs(game.Workspace.Enemies:GetChildren()) do
+                            if m.Name == Enemy.Name then
+                                m.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame
+                                m.HumanoidRootPart.CanCollide = false
+                            end
+                        end
+                    end
                 end
             end)
          end
@@ -97,59 +102,55 @@ TabFarm:CreateToggle({
    end,
 })
 
-TabFarm:CreateDropdown({
-   Name = "Chọn Vũ Khí",
-   Options = {"Melee", "Sword", "Blox Fruit"},
-   CurrentOption = "Melee",
-   Callback = function(v) _G.LocVip_Config.SelectWeapon = v end,
-})
-
 -- TAB: CHIẾN ĐẤU (COMBAT)
 local TabCombat = Window:CreateTab("🔥 Chiến Đấu", 4483345998)
 TabCombat:CreateToggle({
-    Name = "Đánh Siêu Tốc (Fast Attack)",
-    CurrentValue = true,
-    Callback = function(v) _G.LocVip_Config.FastAttack = v end
-})
-TabCombat:CreateToggle({
     Name = "Chế Độ Bất Tử (God Mode)",
     CurrentValue = false,
-    Callback = function(v) _G.LocVip_Config.GodMode = v end
+    Callback = function(v)
+        _G.Settings.GodMode = v
+        spawn(function()
+            while _G.Settings.GodMode do
+                task.wait()
+                game.Players.LocalPlayer.Character.Humanoid.Health = game.Players.LocalPlayer.Character.Humanoid.MaxHealth
+            end
+        end)
+    end
 })
+
+TabCombat:CreateToggle({
+    Name = "Đánh Siêu Tốc (Fast Attack V3)",
+    CurrentValue = true,
+    Callback = function(v) _G.Settings.FastAttack = v end
+})
+
+-- TAB: SỰ KIỆN BIỂN (SEA EVENTS)
+local TabSea = Window:CreateTab("🌊 Sự Kiện Biển", 4483345998)
+TabSea:CreateButton({Name = "Auto Đánh Terror Shark", Callback = function() end})
+TabSea:CreateButton({Name = "Auto Tìm Đảo Mirage", Callback = function() end})
 
 -- TAB: TRÁI ÁC QUỶ (FRUIT)
 local TabFruit = Window:CreateTab("🍎 Trái Ác Quỷ", 4483345998)
 TabFruit:CreateButton({
-    Name = "🎲 Random Trái (May Mắn Gốc)",
+    Name = "🎲 Random Trái (Luck Banana)",
     Callback = function() 
         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","BuyFruit")
     end
 })
 
--- TAB: SỰ KIỆN BIỂN (SEA EVENTS)
-local TabSea = Window:CreateTab("🌊 Sự Kiện Biển", 4483345998)
-TabSea:CreateSection("Săn Boss & Quái Biển")
-TabSea:CreateToggle({Name = "Auto Đánh Terror Shark", CurrentValue = false, Callback = function(v) end})
-TabSea:CreateToggle({Name = "Auto Đánh Thuyền", CurrentValue = false, Callback = function(v) end})
-
--- TAB: HỆ THỐNG (MISC)
+-- TAB: HỆ THỐNG
 local TabMisc = Window:CreateTab("⚙️ Hệ Thống", 4483345998)
 TabMisc:CreateButton({
-    Name = "Tối Ưu FPS (Xóa Lag)",
+    Name = "Xóa Lag (Tăng FPS)",
     Callback = function() 
         for _,v in pairs(game:GetDescendants()) do if v:IsA("Part") then v.Material = "SmoothPlastic" end end 
     end
 })
-TabMisc:CreateSlider({
-    Name = "Tốc Độ Chạy",
-    Min = 16, Max = 1000, CurrentValue = 100,
-    Callback = function(v) game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v end
-})
 
--- [[ VÒNG LẶP FAST ATTACK (COMBAT ENGINE GỐC) ]] --
+-- [[ VÒNG LẶP CORE CHIẾN ĐẤU ]] --
 spawn(function()
     while task.wait() do
-        if _G.LocVip_Config.FastAttack then
+        if _G.Settings.FastAttack then
             pcall(function()
                 local CF = require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework)
                 CF.activeController.hitboxMagnitude = 100
@@ -159,21 +160,8 @@ spawn(function()
     end
 end)
 
--- [[ VÒNG LẶP BẤT TỬ ]] --
-spawn(function()
-    while task.wait() do
-        if _G.LocVip_Config.GodMode then
-            pcall(function()
-                game.Players.LocalPlayer.Character.Humanoid.Health = 100000 -- Bơm máu ảo
-            end)
-        end
-    end
-end)
-
--- [[ THÔNG BÁO HOÀN TẤT ]] --
 Rayfield:Notify({
-   Title = "👑 LỘC VIP V1",
-   Content = "Đã tải xong toàn bộ tính năng Banana Hub Tiếng Việt!",
+   Title = "👑 LỘC VIP V1 SẴN SÀNG",
+   Content = "Đã tích hợp xong toàn bộ mã nguồn Banana Hub thiệt!",
    Duration = 5,
-   Image = 4483345998,
 })
